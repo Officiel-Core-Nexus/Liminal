@@ -16,18 +16,24 @@
 </head>
 <body>
 
+<!-- Three.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
   // SCÈNE
   const scene = new THREE.Scene();
 
-  // CAMÉRA
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  // CAMÉRA FPS
+  const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
   camera.position.set(0, 1.7, 0);
 
   // RENDERER
-  const renderer = new THREE.WebGLRenderer();
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
@@ -36,21 +42,31 @@
   light.position.set(0, 3, 0);
   scene.add(light);
 
-  // MURS BACKROOMS
-  const texture = new THREE.TextureLoader().load("https://i.imgur.com/0Zf0YwP.jpeg");
-  const wallMaterial = new THREE.MeshBasicMaterial({ map: texture });
+  // TEXTURE BACKROOMS
+  const texture = new THREE.TextureLoader().load(
+    "https://i.imgur.com/0Zf0YwP.jpeg"
+  );
 
-  const wallGeometry = new THREE.BoxGeometry(20, 3, 20);
-  const walls = new THREE.Mesh(wallGeometry, wallMaterial);
-  walls.position.y = 1.5;
-  scene.add(walls);
+  // MURS VISIBLE DE L’INTÉRIEUR
+  const wallMaterial = new THREE.MeshBasicMaterial({
+    map: texture,
+    side: THREE.BackSide
+  });
 
-  // CONTROLES FPS SIMPLES
-  let speed = 0.1;
+  // PIÈCE BACKROOMS
+  const room = new THREE.Mesh(
+    new THREE.BoxGeometry(20, 3, 20),
+    wallMaterial
+  );
+  room.position.y = 1.5;
+  scene.add(room);
+
+  // CONTROLES FPS
   const keys = {};
+  let speed = 0.08;
 
-  document.addEventListener("keydown", e => keys[e.key] = true);
-  document.addEventListener("keyup", e => keys[e.key] = false);
+  document.addEventListener("keydown", (e) => keys[e.key] = true);
+  document.addEventListener("keyup", (e) => keys[e.key] = false);
 
   function updateMovement() {
     if (keys["w"]) camera.position.z -= speed;
@@ -59,7 +75,14 @@
     if (keys["d"]) camera.position.x += speed;
   }
 
-  // ANIMATION
+  // ADAPTATION FENÊTRE
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // BOUCLE DE RENDU
   function animate() {
     requestAnimationFrame(animate);
     updateMovement();
