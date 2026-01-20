@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>LIMINAL – Mode Solo</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+  // SCÈNE
+  const scene = new THREE.Scene();
+
+  // CAMÉRA
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 1.7, 0);
+
+  // RENDERER
+  const renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // LUMIÈRE
+  const light = new THREE.PointLight(0xffffcc, 1, 20);
+  light.position.set(0, 3, 0);
+  scene.add(light);
+
+  // MURS BACKROOMS
+  const texture = new THREE.TextureLoader().load("https://i.imgur.com/0Zf0YwP.jpeg");
+  const wallMaterial = new THREE.MeshBasicMaterial({ map: texture });
+
+  const wallGeometry = new THREE.BoxGeometry(20, 3, 20);
+  const walls = new THREE.Mesh(wallGeometry, wallMaterial);
+  walls.position.y = 1.5;
+  scene.add(walls);
+
+  // CONTROLES FPS SIMPLES
+  let speed = 0.1;
+  const keys = {};
+
+  document.addEventListener("keydown", e => keys[e.key] = true);
+  document.addEventListener("keyup", e => keys[e.key] = false);
+
+  function updateMovement() {
+    if (keys["w"]) camera.position.z -= speed;
+    if (keys["s"]) camera.position.z += speed;
+    if (keys["a"]) camera.position.x -= speed;
+    if (keys["d"]) camera.position.x += speed;
+  }
+
+  // ANIMATION
+  function animate() {
+    requestAnimationFrame(animate);
+    updateMovement();
+    renderer.render(scene, camera);
+  }
+
+  animate();
+</script>
+
+</body>
+</html>
