@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>LIMINAL</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- FOND ANIMÉ -->
+  <div class="background">
+    <div class="lines"></div>
+  </div>
+
+  <!-- MENU PRINCIPAL -->
+  <div class="main-menu">
+    <h1>LIMINAL</h1>
+
+    <div class="buttons">
+      <button onclick="startSolo()">Jouer tout seul</button>
+      <button onclick="startMultiplayer()">Multiplayer</button>
+    </div>
+
+    <p class="footer">made by core nexus ©2026 all rights reserved</p>
+  </div>
+
+  <!-- BARRE LATERALE -->
+  <div class="sidebar">
+    <button class="icon-btn" data-panel="chat">
+      <img src="icons/chat.svg" alt="Chat">
+    </button>
+
+    <button class="icon-btn" data-panel="group">
+      <img src="icons/group.svg" alt="Groupe">
+    </button>
+
+    <button class="icon-btn" data-panel="profile">
+      <img src="icons/user.svg" alt="Profil">
+    </button>
+
+    <button class="icon-btn" data-panel="settings">
+      <img src="icons/settings.svg" alt="Paramètres">
+    </button>
+
+    <button class="icon-btn" onclick="toggleFullscreen()">
+      <img src="icons/fullscreen.svg" alt="Fullscreen">
+    </button>
+  </div>
+
+  <!-- PANNEAUX -->
+  <div id="panel" class="panel hidden">
+    <div id="panel-content"></div>
+    <button class="close-panel" onclick="closePanel()">Fermer</button>
+  </div>
+
+  <script>
+    // Boutons du menu
+    function startSolo() {
+      alert("Chargement du mode solo...");
+    }
+
+    function startMultiplayer() {
+      alert("Le multijoueur arrive bientôt.");
+    }
+
+    // Plein écran
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // Panneaux latéraux
+    const panel = document.getElementById("panel");
+    const panelContent = document.getElementById("panel-content");
+
+    document.querySelectorAll(".icon-btn[data-panel]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const type = btn.dataset.panel;
+
+        if (type === "chat") panelContent.textContent = "Chat indisponible (prototype)";
+        if (type === "group") panelContent.textContent = "Groupe / Lobby";
+        if (type === "profile") panelContent.textContent = "Profil du joueur";
+        if (type === "settings") panelContent.textContent = "Paramètres du jeu";
+
+        panel.classList.remove("hidden");
+      });
+    });
+
+    function closePanel() {
+      panel.classList.add("hidden");
+    }
+  </script>
+
+</body>
+</html>
