@@ -1,121 +1,99 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>LIMINAL – Mode Solo</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: #000;
-    }
-    canvas {
-      display: block;
-    }
-    #loading {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #ffd700;
-      font-family: monospace;
-      font-size: 1.2rem;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <title>LIMINAL</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<div id="loading">Chargement du niveau LIMINAL...</div>
+  <!-- FOND ANIMÉ -->
+  <div class="background">
+    <div class="lines"></div>
+  </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- MENU PRINCIPAL -->
+  <div class="main-menu">
+    <h1>LIMINAL</h1>
 
-<script>
-  const scene = new THREE.Scene();
+    <div class="buttons">
+      <button onclick="startSolo()">Jouer tout seul</button>
+      <button onclick="startMultiplayer()">Multiplayer</button>
+    </div>
 
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 1.7, 0);
+    <p class="footer">made by core nexus ©2026 all rights reserved</p>
+  </div>
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+  <!-- BARRE LATERALE -->
+  <div class="sidebar">
+    <button class="icon-btn" data-panel="chat">
+      <img src="icons/chat.svg" alt="Chat">
+    </button>
 
-  const light = new THREE.PointLight(0xffffcc, 2, 50);
-  light.position.set(0, 3, 0);
-  scene.add(light);
+    <button class="icon-btn" data-panel="group">
+      <img src="icons/group.svg" alt="Groupe">
+    </button>
 
-  const loader = new THREE.TextureLoader();
-  loader.load(
-    "https://i.imgur.com/0Zf0YwP.jpeg",
-    (texture) => {
-      document.getElementById("loading").remove();
+    <button class="icon-btn" data-panel="profile">
+      <img src="icons/user.svg" alt="Profil">
+    </button>
 
-      const wallMaterial = new THREE.MeshBasicMaterial({
-        map: texture,
-        side: THREE.BackSide
-      });
+    <button class="icon-btn" data-panel="settings">
+      <img src="icons/settings.svg" alt="Paramètres">
+    </button>
 
-      const room = new THREE.Mesh(
-        new THREE.BoxGeometry(20, 3, 20),
-        wallMaterial
-      );
-      room.position.y = 1.5;
-      scene.add(room);
+    <button class="icon-btn" onclick="toggleFullscreen()">
+      <img src="icons/fullscreen.svg" alt="Fullscreen">
+    </button>
+  </div>
 
-      const floor = new THREE.Mesh(
-        new THREE.PlaneGeometry(20, 20),
-        new THREE.MeshBasicMaterial({ map: texture })
-      );
-      floor.rotation.x = -Math.PI / 2;
-      scene.add(floor);
-    },
-    undefined,
-    () => {
-      document.getElementById("loading").textContent = "Erreur : texture non chargée.";
-      const fallbackMaterial = new THREE.MeshBasicMaterial({ color: 0x222222, side: THREE.BackSide });
+  <!-- PANNEAUX -->
+  <div id="panel" class="panel hidden">
+    <div id="panel-content"></div>
+    <button class="close-panel" onclick="closePanel()">Fermer</button>
+  </div>
 
-      const room = new THREE.Mesh(
-        new THREE.BoxGeometry(20, 3, 20),
-        fallbackMaterial
-      );
-      room.position.y = 1.5;
-      scene.add(room);
-
-      const floor = new THREE.Mesh(
-        new THREE.PlaneGeometry(20, 20),
-        new THREE.MeshBasicMaterial({ color: 0x111111 })
-      );
-      floor.rotation.x = -Math.PI / 2;
-      scene.add(floor);
+  <script>
+    // Boutons du menu
+    function startSolo() {
+      alert("Chargement du mode solo...");
     }
-  );
 
-  const keys = {};
-  let speed = 0.08;
+    function startMultiplayer() {
+      alert("Le multijoueur arrive bientôt.");
+    }
 
-  document.addEventListener("keydown", (e) => keys[e.key.toLowerCase()] = true);
-  document.addEventListener("keyup", (e) => keys[e.key.toLowerCase()] = false);
+    // Plein écran
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
 
-  function updateMovement() {
-    if (keys["w"]) camera.position.z -= speed;
-    if (keys["s"]) camera.position.z += speed;
-    if (keys["a"]) camera.position.x -= speed;
-    if (keys["d"]) camera.position.x += speed;
-  }
+    // Panneaux latéraux
+    const panel = document.getElementById("panel");
+    const panelContent = document.getElementById("panel-content");
 
-  window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
+    document.querySelectorAll(".icon-btn[data-panel]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const type = btn.dataset.panel;
 
-  function animate() {
-    requestAnimationFrame(animate);
-    updateMovement();
-    renderer.render(scene, camera);
-  }
+        if (type === "chat") panelContent.textContent = "Chat indisponible (prototype)";
+        if (type === "group") panelContent.textContent = "Groupe / Lobby";
+        if (type === "profile") panelContent.textContent = "Profil du joueur";
+        if (type === "settings") panelContent.textContent = "Paramètres du jeu";
 
-  animate();
-</script>
+        panel.classList.remove("hidden");
+      });
+    });
+
+    function closePanel() {
+      panel.classList.add("hidden");
+    }
+  </script>
 
 </body>
 </html>
