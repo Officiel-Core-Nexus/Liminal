@@ -45,7 +45,7 @@
 
   const loader = new THREE.TextureLoader();
   loader.load(
-    "https://i.imgur.com/0Zf0YwP.jpeg",
+    "https://upload.wikimedia.org/wikipedia/commons/3/3f/Backrooms_wall_texture.jpg",
     (texture) => {
       document.getElementById("loading").remove();
 
@@ -71,6 +71,7 @@
     undefined,
     () => {
       document.getElementById("loading").textContent = "Erreur : texture non chargée.";
+
       const fallbackMaterial = new THREE.MeshBasicMaterial({ color: 0x222222, side: THREE.BackSide });
 
       const room = new THREE.Mesh(
