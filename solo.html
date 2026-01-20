@@ -39,33 +39,55 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  const light = new THREE.PointLight(0xffffcc, 1.5, 30);
+  const light = new THREE.PointLight(0xffffcc, 2, 50);
   light.position.set(0, 3, 0);
   scene.add(light);
 
   const loader = new THREE.TextureLoader();
-  loader.load("https://i.imgur.com/0Zf0YwP.jpeg", (texture) => {
-    document.getElementById("loading").remove();
+  loader.load(
+    "https://i.imgur.com/0Zf0YwP.jpeg",
+    (texture) => {
+      document.getElementById("loading").remove();
 
-    const wallMaterial = new THREE.MeshBasicMaterial({
-      map: texture,
-      side: THREE.BackSide
-    });
+      const wallMaterial = new THREE.MeshBasicMaterial({
+        map: texture,
+        side: THREE.BackSide
+      });
 
-    const room = new THREE.Mesh(
-      new THREE.BoxGeometry(20, 3, 20),
-      wallMaterial
-    );
-    room.position.y = 1.5;
-    scene.add(room);
+      const room = new THREE.Mesh(
+        new THREE.BoxGeometry(20, 3, 20),
+        wallMaterial
+      );
+      room.position.y = 1.5;
+      scene.add(room);
 
-    const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(20, 20),
-      new THREE.MeshBasicMaterial({ map: texture })
-    );
-    floor.rotation.x = -Math.PI / 2;
-    scene.add(floor);
-  });
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(20, 20),
+        new THREE.MeshBasicMaterial({ map: texture })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      scene.add(floor);
+    },
+    undefined,
+    () => {
+      document.getElementById("loading").textContent = "Erreur : texture non chargée.";
+      const fallbackMaterial = new THREE.MeshBasicMaterial({ color: 0x222222, side: THREE.BackSide });
+
+      const room = new THREE.Mesh(
+        new THREE.BoxGeometry(20, 3, 20),
+        fallbackMaterial
+      );
+      room.position.y = 1.5;
+      scene.add(room);
+
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(20, 20),
+        new THREE.MeshBasicMaterial({ color: 0x111111 })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      scene.add(floor);
+    }
+  );
 
   const keys = {};
   let speed = 0.08;
