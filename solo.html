@@ -12,61 +12,66 @@
     canvas {
       display: block;
     }
+    #loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ffd700;
+      font-family: monospace;
+      font-size: 1.2rem;
+    }
   </style>
 </head>
 <body>
 
-<!-- Three.js -->
+<div id="loading">Chargement du niveau LIMINAL...</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
-  // SCÈNE
   const scene = new THREE.Scene();
 
-  // CAMÉRA FPS
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-  );
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.set(0, 1.7, 0);
 
-  // RENDERER
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  // LUMIÈRE
-  const light = new THREE.PointLight(0xffffcc, 1, 20);
+  const light = new THREE.PointLight(0xffffcc, 1.5, 30);
   light.position.set(0, 3, 0);
   scene.add(light);
 
-  // TEXTURE BACKROOMS
-  const texture = new THREE.TextureLoader().load(
-    "https://i.imgur.com/0Zf0YwP.jpeg"
-  );
+  const loader = new THREE.TextureLoader();
+  loader.load("https://i.imgur.com/0Zf0YwP.jpeg", (texture) => {
+    document.getElementById("loading").remove();
 
-  // MURS VISIBLE DE L’INTÉRIEUR
-  const wallMaterial = new THREE.MeshBasicMaterial({
-    map: texture,
-    side: THREE.BackSide
+    const wallMaterial = new THREE.MeshBasicMaterial({
+      map: texture,
+      side: THREE.BackSide
+    });
+
+    const room = new THREE.Mesh(
+      new THREE.BoxGeometry(20, 3, 20),
+      wallMaterial
+    );
+    room.position.y = 1.5;
+    scene.add(room);
+
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(20, 20),
+      new THREE.MeshBasicMaterial({ map: texture })
+    );
+    floor.rotation.x = -Math.PI / 2;
+    scene.add(floor);
   });
 
-  // PIÈCE BACKROOMS
-  const room = new THREE.Mesh(
-    new THREE.BoxGeometry(20, 3, 20),
-    wallMaterial
-  );
-  room.position.y = 1.5;
-  scene.add(room);
-
-  // CONTROLES FPS
   const keys = {};
   let speed = 0.08;
 
-  document.addEventListener("keydown", (e) => keys[e.key] = true);
-  document.addEventListener("keyup", (e) => keys[e.key] = false);
+  document.addEventListener("keydown", (e) => keys[e.key.toLowerCase()] = true);
+  document.addEventListener("keyup", (e) => keys[e.key.toLowerCase()] = false);
 
   function updateMovement() {
     if (keys["w"]) camera.position.z -= speed;
@@ -75,14 +80,12 @@
     if (keys["d"]) camera.position.x += speed;
   }
 
-  // ADAPTATION FENÊTRE
   window.addEventListener("resize", () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  // BOUCLE DE RENDU
   function animate() {
     requestAnimationFrame(animate);
     updateMovement();
