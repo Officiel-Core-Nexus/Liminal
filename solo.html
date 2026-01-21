@@ -1,122 +1,255 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>LIMINAL – Mode Solo</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: #000;
-    }
-    canvas {
-      display: block;
-    }
-    #loading {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #ffd700;
-      font-family: monospace;
-      font-size: 1.2rem;
-    }
-  </style>
-</head>
-<body>
+// =========================
+// LIMINAL - MODE SOLO
+// solo.js
+// =========================
 
-<div id="loading">Chargement du niveau LIMINAL...</div>
+// --- CONFIG DE BASE ---
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+canvas.width = 960;
+canvas.height = 540;
 
-<script>
-  const scene = new THREE.Scene();
+// --- ETAT DU JEU ---
+const gameState = {
+    running: true,
+    currentZone: "corridor",
+    time: 0,
+    presenceLevel: 0,
+};
 
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 1.7, 0);
+// --- JOUEUR ---
+const player = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    speed: 2.2,
+    size: 18,
+    color: "#f5f5f5",
+    vx: 0,
+    vy: 0,
+};
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+// --- INPUT ---
+const keys = {
+    ArrowUp: false,
+    ArrowDown: false,
+    ArrowLeft: false,
+    ArrowRight: false,
+    z: false,
+    q: false,
+    s: false,
+    d: false,
+};
 
-  const light = new THREE.PointLight(0xffffcc, 2, 50);
-  light.position.set(0, 3, 0);
-  scene.add(light);
+window.addEventListener("keydown", (e) => {
+    if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
+});
 
-  const loader = new THREE.TextureLoader();
-  loader.load(
-    "https://upload.wikimedia.org/wikipedia/commons/3/3f/Backrooms_wall_texture.jpg",
-    (texture) => {
-      document.getElementById("loading").remove();
+window.addEventListener("keyup", (e) => {
+    if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
+});
 
-      const wallMaterial = new THREE.MeshBasicMaterial({
-        map: texture,
-        side: THREE.BackSide
-      });
-
-      const room = new THREE.Mesh(
-        new THREE.BoxGeometry(20, 3, 20),
-        wallMaterial
-      );
-      room.position.y = 1.5;
-      scene.add(room);
-
-      const floor = new THREE.Mesh(
-        new THREE.PlaneGeometry(20, 20),
-        new THREE.MeshBasicMaterial({ map: texture })
-      );
-      floor.rotation.x = -Math.PI / 2;
-      scene.add(floor);
+// --- ZONES ---
+const zones = {
+    corridor: {
+        name: "Couloir Infini",
+        bgColor: "#1a1a1f",
+        neonColor: "#f5f5dc",
+        noiseIntensity: 0.08,
     },
-    undefined,
-    () => {
-      document.getElementById("loading").textContent = "Erreur : texture non chargée.";
+    parking: {
+        name: "Parking Vide",
+        bgColor: "#101015",
+        neonColor: "#c0c0c0",
+        noiseIntensity: 0.12,
+    },
+    office: {
+        name: "Bureaux Abandonnés",
+        bgColor: "#181820",
+        neonColor: "#e0d8c0",
+        noiseIntensity: 0.1,
+    },
+};
 
-      const fallbackMaterial = new THREE.MeshBasicMaterial({ color: 0x222222, side: THREE.BackSide });
+// --- UTILS ---
+function lerp(a, b, t) {
+    return a + (b - a) * t;
+}
 
-      const room = new THREE.Mesh(
-        new THREE.BoxGeometry(20, 3, 20),
-        fallbackMaterial
-      );
-      room.position.y = 1.5;
-      scene.add(room);
+// --- MISE A JOUR JOUEUR ---
+function updatePlayer() {
+    let vx = 0;
+    let vy = 0;
 
-      const floor = new THREE.Mesh(
-        new THREE.PlaneGeometry(20, 20),
-        new THREE.MeshBasicMaterial({ color: 0x111111 })
-      );
-      floor.rotation.x = -Math.PI / 2;
-      scene.add(floor);
+    if (keys.ArrowUp || keys.z) vy -= 1;
+    if (keys.ArrowDown || keys.s) vy += 1;
+    if (keys.ArrowLeft || keys.q) vx -= 1;
+    if (keys.ArrowRight || keys.d) vx += 1;
+
+    if (vx !== 0 && vy !== 0) {
+        vx *= Math.SQRT1_2;
+        vy *= Math.SQRT1_2;
     }
-  );
 
-  const keys = {};
-  let speed = 0.08;
+    player.vx = vx * player.speed;
+    player.vy = vy * player.speed;
 
-  document.addEventListener("keydown", (e) => keys[e.key.toLowerCase()] = true);
-  document.addEventListener("keyup", (e) => keys[e.key.toLowerCase()] = false);
+    player.x += player.vx;
+    player.y += player.vy;
 
-  function updateMovement() {
-    if (keys["w"]) camera.position.z -= speed;
-    if (keys["s"]) camera.position.z += speed;
-    if (keys["a"]) camera.position.x -= speed;
-    if (keys["d"]) camera.position.x += speed;
-  }
+    if (player.x < player.size) player.x = player.size;
+    if (player.x > canvas.width - player.size) player.x = canvas.width - player.size;
+    if (player.y < player.size) player.y = player.size;
+    if (player.y > canvas.height - player.size) player.y = canvas.height - player.size;
+}
 
-  window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
+// --- PRESENCE ---
+function updatePresence(delta) {
+    gameState.presenceLevel += delta * 0.00003;
+    if (gameState.presenceLevel > 1) gameState.presenceLevel = 1;
 
-  function animate() {
-    requestAnimationFrame(animate);
-    updateMovement();
-    renderer.render(scene, camera);
-  }
+    if (Math.random() < 0.0008 + gameState.presenceLevel * 0.002) {
+        triggerWeirdEvent();
+    }
+}
 
-  animate();
-</script>
+// --- EVENEMENTS ---
+let flashAlpha = 0;
+let vignetteIntensity = 0.4;
 
-</body>
-</html>
+function triggerWeirdEvent() {
+    const r = Math.random();
+
+    if (r < 0.4) {
+        flashAlpha = 0.9;
+    } else if (r < 0.8) {
+        vignetteIntensity = Math.min(0.9, vignetteIntensity + 0.1);
+    } else {
+        const offset = 20 + Math.random() * 40;
+        player.x += (Math.random() < 0.5 ? -offset : offset);
+        player.y += (Math.random() < 0.5 ? -offset : offset);
+    }
+}
+
+// --- CHANGEMENT DE ZONE ---
+function updateZone() {
+    const t = (Math.sin(gameState.time * 0.00005) + 1) / 2;
+
+    if (t < 0.33) gameState.currentZone = "corridor";
+    else if (t < 0.66) gameState.currentZone = "parking";
+    else gameState.currentZone = "office";
+}
+
+// --- RENDU FOND ---
+function drawBackground() {
+    const zone = zones[gameState.currentZone];
+
+    ctx.fillStyle = zone.bgColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.save();
+    ctx.globalAlpha = 0.25;
+    ctx.strokeStyle = zone.neonColor;
+    ctx.lineWidth = 2;
+
+    const spacing = 80;
+    for (let x = -spacing; x < canvas.width + spacing; x += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(x + (gameState.time * 0.02) % spacing, 0);
+        ctx.lineTo(x + (gameState.time * 0.02) % spacing, canvas.height);
+        ctx.stroke();
+    }
+
+    ctx.restore();
+
+    const noiseIntensity = zone.noiseIntensity;
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    for (let i = 0; i < data.length; i += 4 * 50) {
+        const v = (Math.random() - 0.5) * 255 * noiseIntensity;
+        data[i] += v;
+        data[i + 1] += v;
+        data[i + 2] += v;
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+}
+
+// --- RENDU JOUEUR ---
+function drawPlayer() {
+    ctx.save();
+    ctx.fillStyle = player.color;
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+}
+
+// --- FX ---
+function drawPostFX() {
+    const gradient = ctx.createRadialGradient(
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width * 0.1,
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width * 0.7
+    );
+    gradient.addColorStop(0, "rgba(0,0,0,0)");
+    gradient.addColorStop(1, `rgba(0,0,0,${vignetteIntensity})`);
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (flashAlpha > 0) {
+        ctx.fillStyle = `rgba(245,245,220,${flashAlpha})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        flashAlpha = Math.max(0, flashAlpha - 0.05);
+    }
+}
+
+// --- HUD ---
+function drawHUD() {
+    ctx.save();
+    ctx.fillStyle = "rgba(255,255,255,0.7)";
+    ctx.font = "14px monospace";
+
+    const zone = zones[gameState.currentZone];
+    ctx.fillText(`Zone: ${zone.name}`, 20, 30);
+
+    const p = Math.round(gameState.presenceLevel * 100);
+    ctx.fillText(`Présence: ${p}%`, 20, 50);
+
+    ctx.restore();
+}
+
+// --- LOOP ---
+let lastTime = performance.now();
+
+function gameLoop(timestamp) {
+    if (!gameState.running) return;
+
+    const delta = timestamp - lastTime;
+    lastTime = timestamp;
+    gameState.time += delta;
+
+    updatePlayer();
+    updateZone();
+    updatePresence(delta);
+
+    drawBackground();
+    drawPlayer();
+    drawPostFX();
+    drawHUD();
+
+    requestAnimationFrame(gameLoop);
+}
+
+// --- START ---
+function startGame() {
+    lastTime = performance.now();
+    requestAnimationFrame(gameLoop);
+}
+
+startGame();
