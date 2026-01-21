@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>LIMINAL – Mode Solo 3D</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-family: monospace;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 50;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.25);
+    }
+  </style>
+</head>
+
+<body>
+
+  <button class="back-btn" onclick="location.href='index.html'">← Retour</button>
+
+  <script src="libs/three.min.js"></script>
+  <script src="solo3d.js"></script>
+
+</body>
+</html>
