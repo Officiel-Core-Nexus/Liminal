@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>LIMINAL</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>LIMINAL – Base UI</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -13,19 +13,7 @@
     <div class="lines"></div>
   </div>
 
-  <!-- MENU PRINCIPAL -->
-  <div class="main-menu">
-    <h1>LIMINAL</h1>
-
-    <div class="buttons">
-      <button onclick="startSolo()">Jouer tout seul</button>
-      <button onclick="startMultiplayer()">Multiplayer</button>
-    </div>
-
-    <p class="footer">made by core nexus ©2026 all rights reserved</p>
-  </div>
-
-  <!-- BARRE LATERALE AVEC ICONES SVG -->
+  <!-- BARRE LATERALE -->
   <div class="sidebar">
 
     <!-- Chat -->
@@ -61,13 +49,6 @@
       </svg>
     </button>
 
-    <!-- Plein écran -->
-    <button class="icon-btn" onclick="toggleFullscreen()">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-        <path d="M4 4h6M4 4v6M20 4h-6M20 4v6M4 20h6M4 20v-6M20 20h-6M20 20v-6" stroke="white" stroke-width="2"/>
-      </svg>
-    </button>
-
   </div>
 
   <!-- PANNEAU LATERAL -->
@@ -78,22 +59,6 @@
 
   <!-- SCRIPT -->
   <script>
-    function startSolo() {
-      alert("Chargement du mode solo...");
-    }
-
-    function startMultiplayer() {
-      alert("Le multijoueur arrive bientôt.");
-    }
-
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    }
-
     const panel = document.getElementById("panel");
     const panelContent = document.getElementById("panel-content");
 
@@ -101,10 +66,10 @@
       btn.addEventListener("click", () => {
         const type = btn.dataset.panel;
 
-        if (type === "chat") panelContent.textContent = "Chat indisponible (prototype)";
-        if (type === "group") panelContent.textContent = "Groupe / Lobby";
+        if (type === "chat") panelContent.textContent = "Chat (prototype)";
+        if (type === "group") panelContent.textContent = "Groupes / Lobby";
         if (type === "profile") panelContent.textContent = "Profil du joueur";
-        if (type === "settings") panelContent.textContent = "Paramètres du jeu";
+        if (type === "settings") panelContent.textContent = "Paramètres";
 
         panel.classList.remove("hidden");
       });
