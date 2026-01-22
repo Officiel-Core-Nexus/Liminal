@@ -8,6 +8,17 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- BARRE À GAUCHE AJOUTÉE -->
+  <div class="taskbar">
+    <button onclick="window.location.href='chat.html'" class="task-button">Chat</button>
+    <button onclick="window.location.href='settings.html'" class="task-button">Paramètres</button>
+    <button onclick="window.location.href='serverdev.html'" class="task-button">Multiplayer</button>
+    <button onclick="window.location.href='redemcode.html'" class="task-button">Redeem Code</button>
+    <button onclick="toggleFullscreen()" class="task-button">Plein écran</button>
+  </div>
+  <!-- FIN DE LA BARRE -->
+
   <div class="background">
     <h1 class="title">LIMINAL</h1>
     <div class="menu-buttons">
@@ -23,5 +34,16 @@
     </div>
     <footer>made by core nexus ©2026 all right reserved</footer>
   </div>
+
+  <script>
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+  </script>
+
 </body>
 </html>
