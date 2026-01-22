@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LIMINAL – S’inscrire</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="auth.css">
 </head>
 <body>
 
@@ -30,15 +30,14 @@
       const pass = document.getElementById('password').value.trim();
 
       if (!email || !user || !pass) {
-        alert("Remplis tous les champs stp.");
+        alert("Remplis tous les champs.");
         return;
       }
 
-      // Stockage local temporaire
       localStorage.setItem("liminal_user", user);
       localStorage.setItem("liminal_email", email);
 
-      window.location.href = "game.html"; // redirection vers le solo mode
+      window.location.href = "game.html";
     }
   </script>
 
