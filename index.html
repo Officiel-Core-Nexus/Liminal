@@ -1,81 +1,27 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LIMINAL</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-
-  <!-- FOND VIDÉO -->
-  <video class="bg-video" autoplay muted loop playsinline>
-    <source src="ma-video-canva.mp4" type="video/mp4">
-  </video>
-
-  <!-- MENU PRINCIPAL -->
-  <div class="main-menu">
-    <h1>LIMINAL</h1>
-
-    <div class="buttons">
-      <button onclick="startSolo()">Jouer tout seul</button>
-      <button onclick="startMultiplayer()">Multiplayer</button>
+  <div class="background">
+    <h1 class="title">LIMINAL</h1>
+    <div class="menu-buttons">
+      <button class="gold-button">Jouer tout seul</button>
+      <button class="gold-button">multiplayer</button>
     </div>
-
-    <p class="footer">made by core nexus ©2026 all right reserved</p>
+    <div class="side-icons">
+      <div class="icon chat"></div>
+      <div class="icon settings"></div>
+      <div class="icon group"></div>
+      <div class="icon user"></div>
+      <div class="icon fullscreen"></div>
+    </div>
+    <footer>made by core nexus ©2026 all right reserved</footer>
   </div>
-
-  <!-- BARRE LATERALE -->
-  <div class="sidebar">
-    <button class="icon-btn" data-panel="chat">💬</button>
-    <button class="icon-btn" data-panel="group">👥</button>
-    <button class="icon-btn" data-panel="profile">👤</button>
-    <button class="icon-btn" data-panel="settings">⚙️</button>
-    <button class="icon-btn" onclick="toggleFullscreen()">⛶</button>
-  </div>
-
-  <!-- PANNEAU LATERAL -->
-  <div id="panel" class="panel hidden">
-    <div id="panel-content"></div>
-    <button class="close-panel" onclick="closePanel()">Fermer</button>
-  </div>
-
-  <!-- SCRIPT -->
-  <script>
-    function startSolo() {
-      window.location.href = "solo.html";
-    }
-
-    function startMultiplayer() {
-      alert("Le multijoueur arrive bientôt.");
-    }
-
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else {
-        document.exitFullscreen();
-      }
-    }
-
-    const panel = document.getElementById("panel");
-    const panelContent = document.getElementById("panel-content");
-
-    document.querySelectorAll(".icon-btn[data-panel]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const type = btn.dataset.panel;
-        if (type === "chat") panelContent.textContent = "Chat (prototype)";
-        if (type === "group") panelContent.textContent = "Groupes / Lobby";
-        if (type === "profile") panelContent.textContent = "Profil du joueur";
-        if (type === "settings") panelContent.textContent = "Paramètres";
-        panel.classList.remove("hidden");
-      });
-    });
-
-    function closePanel() {
-      panel.classList.add("hidden");
-    }
-  </script>
-
 </body>
 </html>
