@@ -1,179 +1,30 @@
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: white;
-}
-
-.background {
-  position: relative;
-  height: 100vh;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    white,
-    white 10px,
-    #eee 10px,
-    #eee 11px
-  );
+.taskbar {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 180px;
+  background: #ffffff;
+  border: 2px solid goldenrod;
+  border-radius: 12px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  gap: 12px;
+  z-index: 999;
 }
 
-.title {
-  font-size: 80px;
-  color: goldenrod;
-  margin-bottom: 40px;
-}
-
-.menu-buttons {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 60px;
-}
-
-.gold-button {
+.task-button {
   background-color: goldenrod;
   color: white;
   border: none;
-  padding: 15px 30px;
-  font-size: 18px;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 8px;
-  transition: background 0.3s;
+  text-align: left;
 }
 
-.gold-button:hover {
-  background-color: #daa520;
+.task-button:hover {
+  background-color: #d4a020;
 }
-
-.side-icons {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.icon {
-  width: 36px;
-  height: 36px;
-  position: relative;
-}
-
-/* CHAT ICON */
-.chat-icon .chat-bubble {
-  position: absolute;
-  inset: 6px 4px 10px 4px;
-  background: goldenrod;
-  border-radius: 8px;
-}
-
-.chat-icon .chat-bubble::after {
-  content: "";
-  position: absolute;
-  bottom: -6px;
-  left: 8px;
-  border-width: 6px 6px 0 0;
-  border-style: solid;
-  border-color: goldenrod transparent transparent transparent;
-}
-
-.chat-icon .chat-line {
-  position: absolute;
-  height: 2px;
-  background: white;
-  left: 9px;
-  right: 9px;
-}
-
-.chat-icon .line1 {
-  top: 13px;
-}
-
-.chat-icon .line2 {
-  top: 18px;
-}
-
-/* SETTINGS ICON (simple engrenage stylisé) */
-.settings-icon .settings-circle {
-  position: absolute;
-  inset: 9px;
-  border-radius: 50%;
-  border: 3px solid goldenrod;
-}
-
-.settings-icon .settings-spoke {
-  position: absolute;
-  background: goldenrod;
-  border-radius: 2px;
-}
-
-.settings-icon .s1 {
-  width: 4px;
-  height: 24px;
-  left: 50%;
-  top: 6px;
-  transform: translateX(-50%);
-}
-
-.settings-icon .s2 {
-  width: 24px;
-  height: 4px;
-  top: 50%;
-  left: 6px;
-  transform: translateY(-50%);
-}
-
-.settings-icon .s3 {
-  width: 18px;
-  height: 4px;
-  top: 50%;
-  left: 9px;
-  transform: translateY(-50%) rotate(45deg);
-}
-
-/* GROUP ICON */
-.group-icon .group-head {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: goldenrod;
-}
-
-.group-icon .group-body {
-  position: absolute;
-  width: 18px;
-  height: 8px;
-  border-radius: 10px;
-  background: goldenrod;
-}
-
-.group-icon .group-head.main {
-  top: 6px;
-  left: 13px;
-}
-
-.group-icon .group-body.main {
-  top: 16px;
-  left: 9px;
-}
-
-.group-icon .group-head.side {
-  top: 9px;
-  background: #d4a52b;
-}
-
-.group-icon .group-head.side.left {
-  left: 4px;
-}
-
-.group-icon .group-head.side.right {
-  right: 4px;
-}
-
-/* USER ICON */
-.user-icon
