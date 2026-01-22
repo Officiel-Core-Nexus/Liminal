@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIMINAL – S’inscrire</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="auth-container">
+    <h2>S’inscrire</h2>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="exemple@exemple.com">
+
+    <label for="username">Nom d’utilisateur</label>
+    <input type="text" id="username" placeholder="exemple123">
+
+    <label for="password">Mot de passe</label>
+    <input type="password" id="password" placeholder="qwerty@£€">
+
+    <button class="gold-button" onclick="register()">S’inscrire</button>
+  </div>
+
+  <script>
+    function register() {
+      const email = document.getElementById('email').value.trim();
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+
+      if (!email || !user || !pass) {
+        alert("Remplis tous les champs stp.");
+        return;
+      }
+
+      // Stockage local temporaire
+      localStorage.setItem("liminal_user", user);
+      localStorage.setItem("liminal_email", email);
+
+      window.location.href = "game.html"; // redirection vers le solo mode
+    }
+  </script>
+
+</body>
+</html>
