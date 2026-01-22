@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIMINAL – Paramètres</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fafafa;
+    }
+
+    .container {
+      width: 350px;
+      margin: 40px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid goldenrod;
+    }
+
+    .title {
+      font-size: 26px;
+      font-weight: bold;
+      color: goldenrod;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    select, input[type=range] {
+      width: 100%;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="title">Paramètres</div>
+
+    <label>Langue</label>
+    <select>
+      <option>Français</option>
+      <option>English</option>
+    </select>
+
+    <label>Volume du son</label>
+    <input type="range" min="0" max="100">
+
+    <label>Qualité graphique</label>
+    <select>
+      <option>Low</option>
+      <option selected>Medium</option>
+      <option>High</option>
+    </select>
+  </div>
+
+</body>
+</html>
