@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIMINAL – Chat</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fafafa;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid goldenrod;
+    }
+
+    .title {
+      font-size: 28px;
+      font-weight: bold;
+      color: goldenrod;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #messages {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background: #fff;
+    }
+
+    #input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid goldenrod;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: goldenrod;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #d4a020;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="title">Chat Global</div>
+
+    <div id="messages"></div>
+
+    <input id="input" placeholder="Écris un message...">
+    <button onclick="sendMessage()">Envoyer</button>
+  </div>
+
+  <script>
+    function sendMessage() {
+      const box = document.getElementById("messages");
+      const input = document.getElementById("input");
+      const user = localStorage.getItem("liminal_user") || "Anonyme";
+
+      if (input.value.trim() === "") return;
+
+      const msg = document.createElement("div");
+      msg.textContent = user + " : " + input.value;
+      box.appendChild(msg);
+
+      input.value = "";
+      box.scrollTop = box.scrollHeight;
+    }
+  </script>
+
+</body>
+</html>
